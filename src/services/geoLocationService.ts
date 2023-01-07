@@ -7,12 +7,13 @@ export const getCurrentPosition = () => {
         maximumAge: 0
       };
       
-      function success(pos: GeolocationPosition): void {
+      const success = (pos: GeolocationPosition): void => {
         const crd: Coords = pos.coords;
         window.localStorage.setItem('coords', JSON.stringify({ latitude: crd.latitude, longitude: crd.longitude}))    
       }
       
-      function error(err: GeolocationPositionError) {
+      const error = (err: GeolocationPositionError)  => {
+            window.localStorage.setItem('coords', JSON.stringify({ latitude: null, longitude: null}))
             throw new Error('Geolocation has failed: ' + err);
       }
       

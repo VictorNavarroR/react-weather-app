@@ -11,10 +11,13 @@ function HomeBanner() {
     const [weather, setWeather] = useState<WeatherModel>();
     const [bannerImage, setBannerImage] = useState<string>();
     const [error, setError] = useState<boolean>(false);
-
+    const [errorTxt, setErrorTxt] = useState<string>('Current city coords not found');
 
     useEffect( () => {
         const coords = JSON.parse(window.localStorage.getItem('coords') as string) as Coords;
+        if(coords.latitude === null && coords.longitude === null) {
+            setErrorTxt('Geolocation permissions haven\'t been accepted by user');
+        }
         getWeatherByCoords(coords.latitude, coords.longitude)
         .then( weather => {
             setWeather(weather);
@@ -29,7 +32,7 @@ function HomeBanner() {
         {
         error 
         ? 
-        <Error error="Current city coords not found" /> 
+        <Error error={errorTxt} /> 
         :
         weather 
         ? 
