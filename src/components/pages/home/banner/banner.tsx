@@ -6,25 +6,46 @@ import { Weather, WeatherModel } from '../../../../models/weather.interface';
 import { getImageByName } from '../../../../services/imagesService';
 import Error from '../../../common/error/error';
 import './banner.scss'
+import { BannerImage } from '../../../../models/bannerImage.interface';
+import { handleGeoPermissionsStatus } from '../../../../services/geoLocationService';
 
 function HomeBanner() {
     const [weather, setWeather] = useState<WeatherModel>();
-    const [bannerImage, setBannerImage] = useState<string>();
+    const [bannerImage, setBannerImage] = useState<BannerImage>();
     const [error, setError] = useState<boolean>(false);
     const [errorTxt, setErrorTxt] = useState<string>('Current city coords not found');
+    const [coords, setCoordinates] = useState<Coords>({latitude: null, longitude: null});
+    const [geoLocationPermmissions, setGeoLocationPermissions] = useState<string>('granted');
 
+      
+    useEffect ( () => {
+        const report = (state: string) => {
+            setGeoLocationPermissions(state);
+        }
+        handleGeoPermissionsStatus(report);
+    }, [])
     useEffect( () => {
-        const coords = JSON.parse(window.localStorage.getItem('coords') as string) as Coords;
+        
         if(coords.latitude === null && coords.longitude === null) {
+            setCoordinates(JSON.parse(window.localStorage.getItem('coords') as string));
+        }
+        
+        if(geoLocationPermmissions === 'denied') {
+            setError(true);
             setErrorTxt('Geolocation permissions haven\'t been accepted by user');
         }
-        getWeatherByCoords(coords.latitude, coords.longitude)
-        .then( weather => {
-            setWeather(weather);
-            getImageByName(weather.weather[0].description).then( image => setBannerImage(image.photos[0].src.landscape));
-        })
-        .catch( () => setError(true) );
-    }, []); 
+        if(geoLocationPermmissions === 'granted') {
+            if(coords.latitude !== null && coords.longitude !== null) {
+            getWeatherByCoords(coords.latitude, coords.longitude)
+                .then( weather => {
+                    setWeather(weather);
+                    getImageByName(weather.weather[0].description).then( image => setBannerImage(image.hits[0].largeImageURL));
+                })
+                .catch( () => setError(true) );
+            }   
+        }
+
+    }, [coords.latitude, coords.longitude, geoLocationPermmissions]); 
     
 
   return (

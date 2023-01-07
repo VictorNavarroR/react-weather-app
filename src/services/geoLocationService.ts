@@ -20,3 +20,19 @@ export const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(success, error, options);
 
 }
+
+export const handleGeoPermissionsStatus = ( report: ( state: string ) => void ) => {
+  navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+    if (result.state === 'granted') {
+      report(result.state);
+    } else if (result.state === 'prompt') {
+      report(result.state);
+    } else if (result.state === 'denied') {
+      report(result.state);
+    }
+    result.addEventListener('change', () => {
+      report(result.state);
+    });
+  });
+}
+
