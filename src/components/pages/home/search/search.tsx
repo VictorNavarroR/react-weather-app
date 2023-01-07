@@ -13,7 +13,7 @@ const [weatherError, setWeatherError] = useState<boolean>();
 const [loading, setLoading] = useState<boolean>();
 
   const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    var lowerCase = event.target.value.toLowerCase();
+    var lowerCase = event.target.value;
     setInputText(lowerCase);
   };
 
