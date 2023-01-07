@@ -1,0 +1,24 @@
+header {
+    width: 100%;
+    padding: 25px 30px;
+    background: rgb(13,77,167);
+    background: linear-gradient(274deg, rgba(13,77,167,1) 11%, rgba(62,112,184,1) 69%);
+    border-bottom: 2px solid var(--secondary);
+    .logo {
+        display: flex;
+        &__img{
+            width:50px;
+            height: 50px;
+            align-self: center;
+        }
+        h1 {
+            display: block;
+            align-self: center;
+            color: white;
+            font-size: 2rem;
+            span {
+                color: rgb(19, 25, 35);
+            }
+        }
+    }
+}
