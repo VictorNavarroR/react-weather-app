@@ -44,3 +44,14 @@ export const getIconByTemp = ( temp: number ) => {
   }
 
 }
+
+export const getForecastInfo = ( lat: number, lon: number ) => {
+  const url = `${config.apiForecastUrl}lat=${lat}&lon=${lon}&units=metric&APPID=${config.apiKey}&cnt=25`
+  return axios.get(url)
+  .then((response: AxiosResponse) => {
+    return response.data;
+  })
+  .catch((err: AxiosError) => {
+    return err;
+  }); 
+}
