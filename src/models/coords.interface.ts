@@ -1,4 +1,9 @@
 export interface Coords {
-    latitude: number | null;
-    longitude: number | null;
+    accuracy?: number;
+    altitude?: string;
+    altitudeAccuracy?: string;
+    heading?:string;
+    latitude: number;
+    longitude: number;    
+    speed?: string;
 }

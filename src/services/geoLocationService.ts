@@ -1,25 +1,38 @@
 import { Coords } from './../models/coords.interface';
 
-export const getCurrentPosition = () => { 
-    const options = {
-        enableHighAccuracy: true,
-        timeout: 2000,
-        maximumAge: 0
-      };
+// export const getCurrentPosition = () => { 
+ 
+//     const options = {
+//         enableHighAccuracy: true,
+//         timeout: 2000,
+//         maximumAge: 0
+//       };
       
-      const success = (pos: GeolocationPosition): void => {
-        const crd: Coords = pos.coords;
-        window.localStorage.setItem('coords', JSON.stringify({ latitude: crd.latitude, longitude: crd.longitude}))    
-      }
+//       const success = (pos: GeolocationPosition): void => {
+//         const crd: Coords = pos.coords;
+//         window.localStorage.setItem('coords', JSON.stringify({ latitude: crd.latitude, longitude: crd.longitude})); 
+//       }
       
-      const error = (err: GeolocationPositionError)  => {
-            window.localStorage.setItem('coords', JSON.stringify({ latitude: null, longitude: null}))
-            throw new Error('Geolocation has failed: ' + err);
-      }
+//       const error = (err: GeolocationPositionError)  => {
+//             throw new Error('Geolocation has failed: ' + err);
+//       }
       
-      navigator.geolocation.getCurrentPosition(success, error, options);
+//       navigator.geolocation.getCurrentPosition(success, error, options);
+// }
 
-}
+export const getCurrentPositionP = (): Promise<GeolocationPosition > => {
+  return new Promise((resolve, reject) => {
+
+      navigator.geolocation.getCurrentPosition(
+          (position) => {
+            window.localStorage.setItem('coords', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude})); 
+            resolve(position)
+          },
+          (error) => reject(error)
+      );
+  });
+};
+
 
 export const handleGeoPermissionsStatus = ( report: ( state: string ) => void ) => {
   navigator.permissions.query({ name: 'geolocation' }).then((result) => {
